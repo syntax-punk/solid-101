@@ -81,7 +81,7 @@ document.querySelector('#solid').innerHTML = `
                         <div class="${titleBadge}">S</div>
                         <div>
                             <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
-                            <p class="text-lg font-medium text-gray-600 italic">Every software component should have one and only one responsibility.</p>
+                            <p class="text-lg font-medium text-gray-600 italic">Cohesion</p>
                         </div>
                     </div>
                 
@@ -180,47 +180,205 @@ document.querySelector('#solid').innerHTML = `
                     <div class="${titleBadge}">S</div>
                     <div>
                         <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
-                        <p class="text-lg font-medium text-gray-600 italic">Every software component should have one and only one responsibility.</p>
+                        <p class="text-lg font-medium text-gray-600 italic">Coupling</p>
                     </div>
                 </div>
                 <div class="flex flex-col md:flex-row gap-6 w-full justify-around items-center">
-                    <img src="/imgs/swiss-knife.png" alt="swiss knife" class="w-[480px]  h-[480px]" />
-                    <img src="/imgs/saw.png" alt="saw" class="w-[500px] h-[260px]" />
+                    <img src="/imgs/landline.png" alt="landline" class="w-[520px]  h-[480px] rounded-lg" />
                 </div>
             </div>
           </section>
 
-                <!-- Open/Closed Principle -->
-                <section class="section-page ${sectionPage}">
+
+                  <!-- Single Responsibility Principle -->
+              <section class="section-page ${sectionPage}">
+
                 <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
                     <div class="flex items-center mb-8">
-                        <div class="${titleBadge}">O</div>
+                        <div class="${titleBadge}">S</div>
                         <div>
-                            <h2 class="text-3xl font-bold text-blue-800">Open/Closed Principle (OCP)</h2>
-                            <p class="text-lg text-gray-600 italic">"Software entities should be open for extension but closed for modification."</p>
+                            <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
+                            <p class="text-lg font-medium text-gray-600 italic">Coupling</p>
                         </div>
                     </div>
-
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">You should be able to extend a class's behavior without modifying its existing code. This is typically achieved through inheritance or composition.</p>
-
+                
                     <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
                         <div class="font-bold text-red-700 mb-4 flex items-center">
                             <span class="mr-2">❌</span>
-                            Bad Example - Modifying Existing Code
+                            Bad Example - Multiple Responsibilities. High level of coupling.
                         </div>
                         <pre class="${codeSnippet}">
-        <code>      class PaymentProcessor {
-            processPayment(amount: number, type: string): void {
-                if (type === 'credit') {
-                    console.log('Processing credit card payment...');
-                } else if (type === 'debit') {
-                    console.log('Processing debit card payment...');
-                } else if (type === 'paypal') {  // New payment method requires modification
-                    console.log('Processing PayPal payment...');
+            <code>
+            public class OrderService {
+                public void processOrder(Order order) {
+                    // processing payment
+                    PayPalAPI paypal = new PayPalAPI("api-key");
+                    paypal.chargeCard(order.getTotal());
+
+                    // business logic mixed with database concerns
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://db.connection");
+                    PreparedStatement stmt = conn.prepareStatement("INSERT INTO orders...");
+                    stmt.setString(1, order.getCustomerId());
+                    stmt.executeUpdate();
+
+                    // email logic
+                    SMTPClient client = new SMTPClient("smtp.gmail.com");
+                    client.sendEmail(order.getCustomerEmail(), "Order confirmed");
                 }
             }
-        }</code></pre>
-                    </div>
+            </code>
+            </pre>
+            </div>
+
+        <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
+            <div class="font-bold text-green-700 mb-4 flex items-center">
+                <span class="mr-2">✅</span>
+                Low coupling. Helps to adhere to SRP.
+            </div>
+        <pre class="${codeSnippet}">
+        <code>
+            public class PaymentService {
+                public boolean processPayment(Order order) {
+                    PayPalAPI paypal = new PayPalAPI("api-key");
+                    return paypal.chargeCard(order.getTotal());
+                }
+            }
+
+            // Order Repository - handles all database operations
+            public class OrderRepository {
+                public void saveOrder(Order order) throws SQLException {
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://db.connection");
+                    PreparedStatement stmt = conn.prepareStatement("INSERT INTO orders...");
+                    stmt.setString(1, order.getCustomerId());
+                    stmt.executeUpdate();
+                    conn.close();
+                }
+            }
+
+            // Email Service - handles all email communications
+            public class EmailService {
+                public void sendConfirmationEmail(Order order) {
+                    SMTPClient client = new SMTPClient("smtp.gmail.com");
+                    client.sendEmail(order.getCustomerEmail(), "Order confirmed");
+                }
+            }
+
+            public class OrderServiceExample {
+                public static void main(String[] args) {
+                    // create dependencies
+                    PaymentService paymentService = new PaymentService();
+                    OrderRepository orderRepository = new OrderRepository();
+                    EmailService emailService = new EmailService();
+                    
+                    // inject dependencies into OrderService
+                    OrderService orderService = new OrderService(
+                        paymentService, 
+                        orderRepository, 
+                        emailService
+                    );
+                    
+                    // process order
+                    Order order = new Order("customer123", 99.99, "customer@email.com");
+                    orderService.processOrder(order);
+                }
+            }
+
+        </code>
+        </pre>
+        </div>
+        </div>
+        </section>
+
+
+        <!-- Open/Closed Principle -->
+        <section class="section-page ${sectionPage}">
+        <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+            <div class="flex items-center mb-8">
+                <div class="${titleBadge}">O</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-blue-800">Open/Closed Principle (OCP)</h2>
+                    <p class="text-lg text-gray-600 italic">"Software components should be closed for modification, but open for extension."</p>
+                </div>
+            </div>
+
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">You should be able to extend a class's behavior without modifying its existing code. This is typically achieved through inheritance or composition.</p>
+
+            <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
+                <div class="font-bold text-red-700 mb-4 flex items-center">
+                    <span class="mr-2">❌</span>
+                    Bad Example - Modifying Existing Code
+                </div>
+                <pre class="${codeSnippet}">
+        <code>
+            // initial implementation
+            public class PremiumMembershipDiscountCalculator {
+                public int calculateDiscount(KennelMembershipProfile membership) {
+
+                    if (membership.getType() == MembershipType.PREMIUM) {
+                        return 25; // 25% discount for premium members
+                    }
+
+                    return 0; // No discount for other members
+                }
+            }
+
+            // kennel membership profile
+            public class KennelMembershipProfile {
+                private MembershipType type;
+                // more logic here
+
+                public MembershipType getType() {
+                    return type;
+                }
+
+            }
+        </code>
+
+        <code>
+            // extending to add new membership type
+            public class PremiumMembershipDiscountCalculator {
+                public int calculateDiscount(KennelMembershipProfile membership) {
+
+                    if (membership.getType() == MembershipType.PREMIUM) {
+                        return 25; // 25% discount for premium members
+                    }
+
+                    return 0; // No discount for other members
+                }
+
+                // overloading method to handle new membership type
+                public int calculateDiscount(HorseMembershipProfile membership) {
+
+                    if (membership.getType() == MembershipType.PREMIUM) {
+                        return 25; // 25% discount for premium members
+                    }
+
+                    return 0; // No discount for other members
+                }
+            }
+
+            // kennel membership profile
+            public class KennelMembershipProfile {
+                private MembershipType type;
+                // more logic here
+
+                public MembershipType getType() {
+                    return type;
+                }
+            }
+
+            // horse membership profile
+            public class HorseMembershipProfile {
+                private MembershipType type;
+                // more logic here
+
+                public MembershipType getType() {
+                    return type;
+                }
+            }
+        </code>
+            </pre>
+            </div>
 
                     <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
                         <div class="font-bold text-green-700 mb-4 flex items-center">
@@ -228,35 +386,54 @@ document.querySelector('#solid').innerHTML = `
                             Good Example - Open for Extension
                         </div>
                         <pre class="${codeSnippet}">
-            <code>        interface PaymentMethod {
-            process(amount: number): void;
-        }
-
-        class CreditCardPayment implements PaymentMethod {
-            process(amount: number): void {
-                console.log('Processing credit card payment...');
+            <code>        
+            
+            public interface MembershipProfile {
+                public boolean isPremiumMember();
             }
-        }
 
-        class DebitCardPayment implements PaymentMethod {
-            process(amount: number): void {
-                console.log('Processing debit card payment...');
-            }
-        }
+            public class KennelMembershipProfile implements MembershipProfile {
+                private MembershipType type;
+                // more logic here
 
-        // New payment method - no modification needed to existing code
-        class PayPalPayment implements PaymentMethod {
-            process(amount: number): void {
-                console.log('Processing PayPal payment...');
+                public MembershipType getType() {
+                    return type;
+                }
+                    
+                @Override
+                public boolean isPremiumMember() {
+                    return type == MembershipType.PREMIUM;
+                }
             }
-        }
 
-        class PaymentProcessor {
-            processPayment(amount: number, paymentMethod: PaymentMethod): void {
-                paymentMethod.process(amount);
+            public class HorseMembershipProfile implements MembershipProfile {
+                private MembershipType type;
+                // more logic here
+
+                public MembershipType getType() {
+                    return type;
+                }
+                    
+                @Override
+                public boolean isPremiumMember() {
+                    return type == MembershipType.PREMIUM;
+                }
             }
-        }</code></pre>
-                    </div>
+
+            public class PremiumMembershipDiscountCalculator {
+                public int calculateDiscount(MembershipProfile membership) {
+
+                    if (membership.isPremiumMember()) {
+                        return 25; // 25% discount for premium members
+                    }
+
+                    return 0; // No discount for other members
+                }
+            }
+
+            </code>
+            </pre>
+            </div>
                 </div>
         </section>
 
@@ -267,7 +444,26 @@ document.querySelector('#solid').innerHTML = `
                   <div class="${titleBadge}">L</div>
                   <div>
                       <h2 class="text-3xl font-bold text-blue-800">Liskov Substitution Principle (LSP)</h2>
-                      <p class="text-lg text-gray-600 italic">"Objects of a superclass should be replaceable with objects of a subclass without altering the correctness of the program."</p>
+                      <p class="text-lg text-gray-600 italic">Objects of a superclass should be replaceable with their subtypes without affecting the correctness of the program."</p>
+                  </div>
+              </div>
+
+              <p class="text-lg text-gray-700 leading-relaxed mb-6">Subclasses should be substitutable for their base classes. This means derived classes must not change the behavior expected from the base class.</p>
+
+                <div class="flex flex-col md:flex-row gap-6 w-full justify-around items-center">
+                    <img src="/imgs/bird.png" alt="swiss knife" class="w-[620px]  h-[480px]" />
+                </div>
+        </div>
+        </section>
+
+          <!-- Liskov Substitution Principle -->
+          <section class="section-page ${sectionPage}">
+          <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+              <div class="flex items-center mb-8">
+                  <div class="${titleBadge}">L</div>
+                  <div>
+                      <h2 class="text-3xl font-bold text-blue-800">Liskov Substitution Principle (LSP)</h2>
+                      <p class="text-lg text-gray-600 italic">Objects of a superclass should be replaceable with their subtypes without affecting the correctness of the program."</p>
                   </div>
               </div>
 
@@ -279,23 +475,26 @@ document.querySelector('#solid').innerHTML = `
                       Bad Example - LSP Violation
                   </div>
                   <pre class="${codeSnippet}">
-          <code>  class Bird {
-      fly(): void {
-          console.log("Flying...");
-      }
-  }
+          <code>  
+            class Bird {
+                fly(): void {
+                    console.log("Flying...");
+                }
+            }
 
-  class Penguin extends Bird {
-      fly(): void {
-          throw new Error("Penguins can't fly!"); // Violates LSP
-      }
-  }
+            class Penguin extends Bird {
+                fly(): void {
+                    throw new Error("Penguins can't fly!"); // Violates LSP
+                }
+            }
 
   // This will break when penguin is used
   function makeBirdFly(bird: Bird): void {
       bird.fly(); // Will throw error for Penguin
-  }</code></pre>
-              </div>
+  }
+      </code>
+      </pre>
+        </div>
 
               <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
                   <div class="font-bold text-green-700 mb-4 flex items-center">
@@ -303,40 +502,44 @@ document.querySelector('#solid').innerHTML = `
                       Good Example - Proper Substitution
                   </div>
                   <pre class="${codeSnippet}">
-      <code>  abstract class Bird {
-      abstract move(): void;
-  }
+        <code>
+            abstract class Bird {
+                abstract move(): void;
+            }
 
-  class FlyingBird extends Bird {
-      move(): void {
-          console.log("Flying...");
-      }
-  }
+            class FlyingBird extends Bird {
+                move(): void {
+                    console.log("Flying...");
+                }
+            }
 
-  class SwimmingBird extends Bird {
-      move(): void {
-          console.log("Swimming...");
-      }
-  }
+            class SwimmingBird extends Bird {
+                move(): void {
+                    console.log("Swimming...");
+                }
+            }
 
-  class Eagle extends FlyingBird {
-      move(): void {
-          console.log("Soaring through the sky...");
-      }
-  }
+            class Eagle extends FlyingBird {
+                move(): void {
+                    console.log("Soaring through the sky...");
+                }
+            }
 
-  class Penguin extends SwimmingBird {
-      move(): void {
-          console.log("Swimming gracefully...");
-      }
-  }
+            class Penguin extends SwimmingBird {
+                move(): void {
+                    console.log("Swimming gracefully...");
+                }
+            }
 
-  // Now any Bird can be substituted safely
-  function makeBirdMove(bird: Bird): void {
-      bird.move(); // Works for all birds
-  }</code></pre>
-              </div>
-          </div>
+            // Now any Bird can be substituted safely
+            function makeBirdMove(bird: Bird): void {
+                bird.move(); // Works for all birds
+            }
+
+        </code>
+        </pre>
+        </div>
+        </div>
         </section>
 
           <!-- Interface Segregation Principle -->
