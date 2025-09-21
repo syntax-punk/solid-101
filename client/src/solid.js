@@ -467,7 +467,6 @@ document.querySelector('#solid').innerHTML = `
                   </div>
               </div>
 
-              <p class="text-lg text-gray-700 leading-relaxed mb-6">Subclasses should be substitutable for their base classes. This means derived classes must not change the behavior expected from the base class.</p>
 
               <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
                   <div class="font-bold text-red-700 mb-4 flex items-center">
@@ -476,23 +475,91 @@ document.querySelector('#solid').innerHTML = `
                   </div>
                   <pre class="${codeSnippet}">
           <code>  
-            class Bird {
-                fly(): void {
-                    console.log("Flying...");
+            public abstract class Bird {
+                public void fly() { }
+
+                public void makeSound() { }
+
+                public void swim() { } 
+            }
+        </code>
+        
+        <code>
+            // duck can fly, quack and swim
+            public class Duck extends Bird {
+                @Override
+                public void fly() {
+                    System.out.println("Duck is flying");
+                }
+                    
+                @Override
+                public void makeSound() {
+                    System.out.println("Quack Quack");
+                }
+                    
+                @Override
+                public void swim() {
+                    System.out.println("Duck is swimming");
                 }
             }
 
-            class Penguin extends Bird {
-                fly(): void {
-                    throw new Error("Penguins can't fly!"); // Violates LSP
+            // rubber duck cannot fly, violates LSP
+            public class RubberDuck extends Duck {
+                @Override
+                public void swim() {
+                    System.out.println("Rubber Duck is floating on the water");
+                }
+
+                @Override
+                public void makeSound() {
+                    System.out.println("Squeak Squeak");
+                }
+
+                @Override
+                public void fly() {
+                    throw new UnsupportedOperationException("Rubber Duck cannot fly");
                 }
             }
 
-  // This will break when penguin is used
-  function makeBirdFly(bird: Bird): void {
-      bird.fly(); // Will throw error for Penguin
-  }
-      </code>
+            // penguin cannot fly, violates LSP
+            public class Penguin extends Bird {
+                @Override
+                public void swim() {
+                    System.out.println("Penguin is swimming");
+                }
+
+                @Override
+                public void makeSound() {
+                    System.out.println("Penguin sound");
+                }
+
+                @Override
+                public void fly() {
+                    throw new UnsupportedOperationException("Penguin cannot fly");
+                }
+            }
+            </code>
+
+            <code>
+            public class BirdUtils {
+
+                Bird bird1 = new Duck();
+                Bird bird2 = new RubberDuck();
+                Bird bird3 = new Penguin();
+
+                List<Bird> birds = new ArrayList<>();
+                birds.add(bird1);
+                birds.add(bird2);
+                birds.add(bird3);   
+
+                for (Bird bird : birds) {
+                    bird.fly();
+                    bird.makeSound();
+                    bird.swim();
+                }
+            }
+
+        </code>
       </pre>
         </div>
 
@@ -503,37 +570,48 @@ document.querySelector('#solid').innerHTML = `
                   </div>
                   <pre class="${codeSnippet}">
         <code>
-            abstract class Bird {
-                abstract move(): void;
+            public abstract class Bird {
+                public void makeSound() { }
             }
 
-            class FlyingBird extends Bird {
-                move(): void {
-                    console.log("Flying...");
+            // new behavioral interfaces - segregated by capability
+            public interface Flyable {
+                void fly();
+            }
+
+            public interface Swimmable {
+                void swim();
+            }
+        </code>
+
+        <code>
+            public class Duck extends Bird implements Flyable, Swimmable {
+                @Override
+                public void makeSound() {
+                    System.out.println("Quack Quack");
+                }
+                
+                @Override
+                public void fly() {
+                    System.out.println("Duck is flying");
+                }
+                
+                @Override
+                public void swim() {
+                    System.out.println("Duck is swimming");
                 }
             }
 
-            class SwimmingBird extends Bird {
-                move(): void {
-                    console.log("Swimming...");
+            public class Penguin extends Bird implements, Swimmable {
+                @Override
+                public void makeSound() {
+                    System.out.println("Penguin sound");
                 }
-            }
-
-            class Eagle extends FlyingBird {
-                move(): void {
-                    console.log("Soaring through the sky...");
+                
+                @Override
+                public void swim() {
+                    System.out.println("Penguin is swimming");
                 }
-            }
-
-            class Penguin extends SwimmingBird {
-                move(): void {
-                    console.log("Swimming gracefully...");
-                }
-            }
-
-            // Now any Bird can be substituted safely
-            function makeBirdMove(bird: Bird): void {
-                bird.move(); // Works for all birds
             }
 
         </code>
@@ -549,7 +627,7 @@ document.querySelector('#solid').innerHTML = `
                   <div class="${titleBadge}">I</div>
                   <div>
                       <h2 class="text-3xl font-bold text-blue-800">Interface Segregation Principle (ISP)</h2>
-                      <p class="text-lg text-gray-600 italic">"No client should be forced to depend on methods it does not use."</p>
+                      <p class="text-lg text-gray-600 italic">No client should be forced to depend on methods it does not use.</p>
                   </div>
               </div>
 
@@ -561,28 +639,62 @@ document.querySelector('#solid').innerHTML = `
                       Bad Example - Fat Interface
                   </div>
                   <pre class="${codeSnippet}">
-              <code>  interface Worker {
-      work(): void;
-      eat(): void;
-      sleep(): void;
-  }
+            <code>  
+                public interface IMultifunctionalAppliance {
+                    public void steer();
+                    public void chop();
+                    public void blend();
+                    public void grind();
+                }
+            </code>
 
-  class HumanWorker implements Worker {
-      work(): void { console.log("Working..."); }
-      eat(): void { console.log("Eating..."); }
-      sleep(): void { console.log("Sleeping..."); }
-  }
+            <code>
+                public class FoodProcessor implements IMultifunctionalAppliance {  
+                    public void steer() { /* Implementation */ }
+                    public void chop() { /* Implementation */ }
+                    public void blend() { /* Implementation */ }
+                    public void grind() { /* Implementation */ }
+                }
+            </code>
 
-  class RobotWorker implements Worker {
-      work(): void { console.log("Working..."); }
-      eat(): void { 
-          throw new Error("Robots don't eat!"); // Forced to implement unused method
-      }
-      sleep(): void { 
-          throw new Error("Robots don't sleep!"); // Forced to implement unused method
-      }
-  }</code></pre>
-              </div>
+            <code>
+                public class Blender implements IMultifunctionalAppliance {  
+                    public void blend() { /* Implementation */ }
+
+                    public void steer() { throw new UnsupportedOperationException("Not supported"); }
+                    public void chop() { throw new UnsupportedOperationException("Not supported"); }
+                    public void grind() { throw new UnsupportedOperationException("Not supported"); }
+                }
+            </code>
+
+            <code>
+                public class CoffeeGrinder implements IMultifunctionalAppliance {
+                    public void grind() { /* Implementation */ }
+
+                    public void steer() { throw new UnsupportedOperationException("Not supported"); }
+                    public void chop() { throw new UnsupportedOperationException("Not supported"); }
+                    public void blend() { throw new UnsupportedOperationException("Not supported"); }
+                }
+            </code>
+
+            <code>
+                // client code
+                public class SmartKitchen {
+                    private IMultifunctionalAppliance appliance;
+
+                    public SmartKitchen(IMultifunctionalAppliance appliance) {
+                        this.appliance = appliance;
+                    }
+
+                    public void prepareMeal() {
+                        appliance.chop();
+                        appliance.blend();
+                        appliance.grind();
+                    }
+                }
+            </code>
+            </pre>
+            </div>
 
               <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
                   <div class="font-bold text-green-700 mb-4 flex items-center">
