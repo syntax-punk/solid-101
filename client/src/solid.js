@@ -56,88 +56,139 @@ document.querySelector('#solid').innerHTML = `
             </div>
           </section>
 
+            <!-- Single Responsibility Principle -->
+          <section class="section-page ${sectionPage}">
+            <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+                <div class="flex items-center mb-8">
+                    <div class="${titleBadge}">S</div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
+                        <p class="text-lg font-medium text-gray-600 italic">Every software component should have one and only one responsibility.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 w-full justify-around items-center">
+                    <img src="/imgs/swiss-knife.png" alt="swiss knife" class="w-[480px]  h-[480px]" />
+                    <img src="/imgs/saw.png" alt="saw" class="w-[500px] h-[260px]" />
+                </div>
+            </div>
+          </section>
+
           <!-- Single Responsibility Principle -->
           <section class="section-page ${sectionPage}">
+
                 <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
                     <div class="flex items-center mb-8">
                         <div class="${titleBadge}">S</div>
                         <div>
                             <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
-                            <p class="text-lg text-gray-600 italic">"A class should have only one reason to change."</p>
+                            <p class="text-lg font-medium text-gray-600 italic">Every software component should have one and only one responsibility.</p>
                         </div>
                     </div>
-
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">Each class should have only one job or responsibility. If a class has multiple responsibilities, changes to one responsibility might affect the others.</p>
-
+                
                     <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
                         <div class="font-bold text-red-700 mb-4 flex items-center">
                             <span class="mr-2">❌</span>
-                            Bad Example - Multiple Responsibilities
+                            Bad Example - Multiple Responsibilities. Low level of cohesion.
                         </div>
                         <pre class="${codeSnippet}">
-            <code>      class User {
-            private name: string;
-            private email: string;
+            <code>      public class Square {
+            int sideLength = 5;
 
-            constructor(name: string, email: string) {
-                this.name = name;
-                this.email = email;
+            public int calculateArea() {
+                return sideLength * sideLength;
             }
 
-            // User data management
-            getName(): string { return this.name; }
-            getEmail(): string { return this.email; }
-
-            // Database operations
-            save(): void {
-                // Save user to database
-                console.log("Saving user to database...");
+            public int calculatePerimeter() {
+                return 4 * sideLength;
             }
 
-            // Email operations
-            sendEmail(message: string): void {
-                // Send email logic
-                console.log('Sending email');
+            public void drawSquare() {
+                // check if graphics library is available
+                // check screen resolution
+                // draw the square on screen
             }
-        }</code>
+
+            public void moveSquare(int x, int y) {
+                // update square position
+                // redraw square
+            }
+
+            public void rotateSquare(int angle) {
+                // rotate square by angle
+                // redraw square
+            }
+
+            public void animateSquare() {
+                // move and rotate square over time
+            }          
+        }
+        </code>
         </pre>
         </div>
 
         <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
             <div class="font-bold text-green-700 mb-4 flex items-center">
                 <span class="mr-2">✅</span>
-                Good Example - Single Responsibility
+                High cohesion. Helps to adhere to SRP.
             </div>
-        <pre class="${codeSnippet}"><code>      // User entity - only handles user data
-        class User {
-            private name: string;
-            private email: string;
+        <pre class="${codeSnippet}"><code>      
+        // Responsibility: Shape measurements
+        public class Square {
+            int sideLength = 5;
 
-            constructor(name: string, email: string) {
-                this.name = name;
-                this.email = email;
+            public int calculateArea() {
+                return sideLength * sideLength;
             }
 
-            getName(): string { return this.name; }
-            getEmail(): string { return this.email; }
-        }
-
-        // Separate class for database operations
-        class UserRepository {
-            save(user: User): void {
-                console.log('Saving user to database...');
+            public int calculatePerimeter() {
+                return 4 * sideLength;
             }
         }
 
-        // Separate class for email operations
-        class EmailService {
-            sendEmail(email: string, message: string): void {
-                console.log('Sending email...');
+        // Responsibility: Rendering and animation
+        public class SquareUI {
+            public void drawSquare() {
+                // check if graphics library is available
+                // check screen resolution
+                // draw the square on screen
             }
-        }</code></pre>
+
+            public void moveSquare(int x, int y) {
+                // update square position
+                // redraw square
+            }
+
+            public void rotateSquare(int angle) {
+                // rotate square by angle
+                // redraw square
+            }
+
+            public void animateSquare() {
+                // move and rotate square over time
+            }   
+        }
+        </code>
+        </pre>
+        </div>
+        </div>
+        </section>
+
+        <!-- Single Responsibility Principle -->
+          <section class="section-page ${sectionPage}">
+            <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+                <div class="flex items-center mb-8">
+                    <div class="${titleBadge}">S</div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-blue-800">Single Responsibility Principle (SRP)</h2>
+                        <p class="text-lg font-medium text-gray-600 italic">Every software component should have one and only one responsibility.</p>
                     </div>
                 </div>
-        </section>
+                <div class="flex flex-col md:flex-row gap-6 w-full justify-around items-center">
+                    <img src="/imgs/swiss-knife.png" alt="swiss knife" class="w-[480px]  h-[480px]" />
+                    <img src="/imgs/saw.png" alt="saw" class="w-[500px] h-[260px]" />
+                </div>
+            </div>
+          </section>
 
                 <!-- Open/Closed Principle -->
                 <section class="section-page ${sectionPage}">
