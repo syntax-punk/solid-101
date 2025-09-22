@@ -47,10 +47,6 @@ document.querySelector('#solid').innerHTML = `
                             <span class="text-green-300 font-bold text-xl mr-3">✓</span>
                             <span>Facilitates better team collaboration</span>
                         </li>
-                        <li class="flex items-start">
-                            <span class="text-green-300 font-bold text-xl mr-3">✓</span>
-                            <span>Reduces technical debt over time</span>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -132,7 +128,7 @@ document.querySelector('#solid').innerHTML = `
                 High cohesion. Helps to adhere to SRP.
             </div>
         <pre class="${codeSnippet}"><code>      
-        // Responsibility: Shape measurements
+        // shape
         public class Square {
             int sideLength = 5;
 
@@ -145,7 +141,11 @@ document.querySelector('#solid').innerHTML = `
             }
         }
 
-        // Responsibility: Rendering and animation
+        </code>
+
+        <code>
+
+        // rendering and animation
         public class SquareUI {
             public void drawSquare() {
                 // check if graphics library is available
@@ -243,8 +243,9 @@ document.querySelector('#solid').innerHTML = `
                     return paypal.chargeCard(order.getTotal());
                 }
             }
+        </code>
 
-            // Order Repository - handles all database operations
+        <code>
             public class OrderRepository {
                 public void saveOrder(Order order) throws SQLException {
                     Connection conn = DriverManager.getConnection("jdbc:mysql://db.connection");
@@ -254,14 +255,17 @@ document.querySelector('#solid').innerHTML = `
                     conn.close();
                 }
             }
+        </code>
 
-            // Email Service - handles all email communications
+        <code>
             public class EmailService {
                 public void sendConfirmationEmail(Order order) {
                     SMTPClient client = new SMTPClient("smtp.gmail.com");
                     client.sendEmail(order.getCustomerEmail(), "Order confirmed");
                 }
             }
+        </code>
+        <code>
 
             public class OrderServiceExample {
                 public static void main(String[] args) {
@@ -297,11 +301,9 @@ document.querySelector('#solid').innerHTML = `
                 <div class="${titleBadge}">O</div>
                 <div>
                     <h2 class="text-3xl font-bold text-blue-800">Open/Closed Principle (OCP)</h2>
-                    <p class="text-lg text-gray-600 italic">"Software components should be closed for modification, but open for extension."</p>
+                    <p class="text-lg text-gray-600 italic">Software components should be closed for modification, but open for extension.</p>
                 </div>
             </div>
-
-            <p class="text-lg text-gray-700 leading-relaxed mb-6">You should be able to extend a class's behavior without modifying its existing code. This is typically achieved through inheritance or composition.</p>
 
             <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
                 <div class="font-bold text-red-700 mb-4 flex items-center">
@@ -318,7 +320,7 @@ document.querySelector('#solid').innerHTML = `
                         return 25; // 25% discount for premium members
                     }
 
-                    return 0; // No discount for other members
+                    return 0;
                 }
             }
 
@@ -334,29 +336,9 @@ document.querySelector('#solid').innerHTML = `
             }
         </code>
 
+        <hr class="my-3 border-red-200"/>
+
         <code>
-            // extending to add new membership type
-            public class PremiumMembershipDiscountCalculator {
-                public int calculateDiscount(KennelMembershipProfile membership) {
-
-                    if (membership.getType() == MembershipType.PREMIUM) {
-                        return 25; // 25% discount for premium members
-                    }
-
-                    return 0; // No discount for other members
-                }
-
-                // overloading method to handle new membership type
-                public int calculateDiscount(HorseMembershipProfile membership) {
-
-                    if (membership.getType() == MembershipType.PREMIUM) {
-                        return 25; // 25% discount for premium members
-                    }
-
-                    return 0; // No discount for other members
-                }
-            }
-
             // kennel membership profile
             public class KennelMembershipProfile {
                 private MembershipType type;
@@ -367,7 +349,7 @@ document.querySelector('#solid').innerHTML = `
                 }
             }
 
-            // horse membership profile
+            // NEW membership profile
             public class HorseMembershipProfile {
                 private MembershipType type;
                 // more logic here
@@ -377,6 +359,31 @@ document.querySelector('#solid').innerHTML = `
                 }
             }
         </code>
+
+        <code>
+            // extending to add new membership type
+            public class PremiumMembershipDiscountCalculator {
+                public int calculateDiscount(KennelMembershipProfile membership) {
+
+                    if (membership.getType() == MembershipType.PREMIUM) {
+                        return 25;
+                    }
+
+                    return 0;
+                }
+
+                // overloading method to handle new membership type
+                public int calculateDiscount(HorseMembershipProfile membership) {
+
+                    if (membership.getType() == MembershipType.PREMIUM) {
+                        return 25;
+                    }
+
+                    return 0;
+                }
+            }
+
+            </code>
             </pre>
             </div>
 
@@ -388,11 +395,15 @@ document.querySelector('#solid').innerHTML = `
                         <pre class="${codeSnippet}">
             <code>        
             
-            public interface MembershipProfile {
+            public interface IMembershipProfile {
                 public boolean isPremiumMember();
             }
 
-            public class KennelMembershipProfile implements MembershipProfile {
+            </code>
+            
+            <code>
+
+            public class KennelMembershipProfile implements IMembershipProfile {
                 private MembershipType type;
                 // more logic here
 
@@ -406,7 +417,7 @@ document.querySelector('#solid').innerHTML = `
                 }
             }
 
-            public class HorseMembershipProfile implements MembershipProfile {
+            public class HorseMembershipProfile implements IMembershipProfile {
                 private MembershipType type;
                 // more logic here
 
@@ -420,17 +431,19 @@ document.querySelector('#solid').innerHTML = `
                 }
             }
 
+            </code>
+            
+            <code>
             public class PremiumMembershipDiscountCalculator {
-                public int calculateDiscount(MembershipProfile membership) {
+                public int calculateDiscount(IMembershipProfile membership) {
 
                     if (membership.isPremiumMember()) {
-                        return 25; // 25% discount for premium members
+                        return 25;
                     }
 
-                    return 0; // No discount for other members
+                    return 0;
                 }
             }
-
             </code>
             </pre>
             </div>
@@ -444,7 +457,7 @@ document.querySelector('#solid').innerHTML = `
                   <div class="${titleBadge}">L</div>
                   <div>
                       <h2 class="text-3xl font-bold text-blue-800">Liskov Substitution Principle (LSP)</h2>
-                      <p class="text-lg text-gray-600 italic">Objects of a superclass should be replaceable with their subtypes without affecting the correctness of the program."</p>
+                      <p class="text-lg text-gray-600 italic">Objects of a superclass should be replaceable with their subtypes without affecting the correctness of the program.</p>
                   </div>
               </div>
 
@@ -503,6 +516,10 @@ document.querySelector('#solid').innerHTML = `
                 }
             }
 
+        </code>
+        
+        <code>
+
             // rubber duck cannot fly, violates LSP
             public class RubberDuck extends Duck {
                 @Override
@@ -547,7 +564,7 @@ document.querySelector('#solid').innerHTML = `
                 Bird bird2 = new RubberDuck();
                 Bird bird3 = new Penguin();
 
-                List<Bird> birds = new ArrayList<>();
+                List< Bird > birds = new ArrayList<>();
                 birds.add(bird1);
                 birds.add(bird2);
                 birds.add(bird3);   
@@ -570,10 +587,6 @@ document.querySelector('#solid').innerHTML = `
                   </div>
                   <pre class="${codeSnippet}">
         <code>
-            public abstract class Bird {
-                public void makeSound() { }
-            }
-
             // new behavioral interfaces - segregated by capability
             public interface Flyable {
                 void fly();
@@ -585,7 +598,27 @@ document.querySelector('#solid').innerHTML = `
         </code>
 
         <code>
-            public class Duck extends Bird implements Flyable, Swimmable {
+            public abstract class Bird {
+                public void makeSound() { }
+            }
+
+            public abstact class FlyingBird extends Bird implements Flyable {
+                @Override
+                public void fly() { }
+            }
+
+            public abstract class SwimmingBird extends Bird implements Swimmable {
+                @Override
+                public void swim() { }
+            }
+
+            public abstract class UltimateBird extends Bird implements Flyable, Swimmable {
+                // keep unimplemented so subclasses must implement everything
+            }
+        </code>
+
+        <code>
+            public class Duck extends UltimateBird {
                 @Override
                 public void makeSound() {
                     System.out.println("Quack Quack");
@@ -601,8 +634,10 @@ document.querySelector('#solid').innerHTML = `
                     System.out.println("Duck is swimming");
                 }
             }
+        </code>
 
-            public class Penguin extends Bird implements, Swimmable {
+        <code>
+            public class Penguin extends SwimmingBird {
                 @Override
                 public void makeSound() {
                     System.out.println("Penguin sound");
@@ -620,6 +655,25 @@ document.querySelector('#solid').innerHTML = `
         </div>
         </section>
 
+                  <!-- Interface Segregation Principle -->
+          <section class="section-page ${sectionPage}">
+          <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+              <div class="flex items-center mb-8">
+                  <div class="${titleBadge}">I</div>
+                  <div>
+                      <h2 class="text-3xl font-bold text-blue-800">Interface Segregation Principle (ISP)</h2>
+                      <p class="text-lg text-gray-600 italic">No client should be forced to depend on methods it does not use.</p>
+                  </div>
+              </div>
+              <p class="text-lg text-gray-700 leading-relaxed mb-6">Create specific, focused interfaces rather than large, general-purpose ones.</p>
+
+                <div class="flex flex-col md:flex-row gap-6 w-full justify-around items-center">
+                    <img src="/imgs/foodpr.png" alt="food processor" class="w-[512px]  h-[512px]" />
+                </div>
+
+          </div>
+          </section>
+
           <!-- Interface Segregation Principle -->
           <section class="section-page ${sectionPage}">
           <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
@@ -631,8 +685,6 @@ document.querySelector('#solid').innerHTML = `
                   </div>
               </div>
 
-              <p class="text-lg text-gray-700 leading-relaxed mb-6">Create specific, focused interfaces rather than large, general-purpose ones. Clients should only depend on interfaces they actually need.</p>
-
               <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg">
                   <div class="font-bold text-red-700 mb-4 flex items-center">
                       <span class="mr-2">❌</span>
@@ -640,7 +692,7 @@ document.querySelector('#solid').innerHTML = `
                   </div>
                   <pre class="${codeSnippet}">
             <code>  
-                public interface IMultifunctionalAppliance {
+                public interface ISmartAppliance {
                     public void steer();
                     public void chop();
                     public void blend();
@@ -649,7 +701,7 @@ document.querySelector('#solid').innerHTML = `
             </code>
 
             <code>
-                public class FoodProcessor implements IMultifunctionalAppliance {  
+                public class FoodProcessor implements ISmartAppliance {  
                     public void steer() { /* Implementation */ }
                     public void chop() { /* Implementation */ }
                     public void blend() { /* Implementation */ }
@@ -658,31 +710,31 @@ document.querySelector('#solid').innerHTML = `
             </code>
 
             <code>
-                public class Blender implements IMultifunctionalAppliance {  
-                    public void blend() { /* Implementation */ }
+            public class Blender implements ISmartAppliance {  
+                public void blend() { /* Implementation */ }
 
-                    public void steer() { throw new UnsupportedOperationException("Not supported"); }
-                    public void chop() { throw new UnsupportedOperationException("Not supported"); }
-                    public void grind() { throw new UnsupportedOperationException("Not supported"); }
-                }
+                public void steer() { throw new UnsupportedOperationException("Not supported"); }
+                public void chop() { throw new UnsupportedOperationException("Not supported"); }
+                public void grind() { throw new UnsupportedOperationException("Not supported"); }
+            }
             </code>
 
             <code>
-                public class CoffeeGrinder implements IMultifunctionalAppliance {
-                    public void grind() { /* Implementation */ }
+            public class CoffeeGrinder implements ISmartAppliance {
+                public void grind() { /* Implementation */ }
 
-                    public void steer() { throw new UnsupportedOperationException("Not supported"); }
-                    public void chop() { throw new UnsupportedOperationException("Not supported"); }
-                    public void blend() { throw new UnsupportedOperationException("Not supported"); }
-                }
+                public void steer() { throw new UnsupportedOperationException("Not supported"); }
+                public void chop() { throw new UnsupportedOperationException("Not supported"); }
+                public void blend() { throw new UnsupportedOperationException("Not supported"); }
+            }
             </code>
 
             <code>
                 // client code
                 public class SmartKitchen {
-                    private IMultifunctionalAppliance appliance;
+                    private ISmartAppliance appliance;
 
-                    public SmartKitchen(IMultifunctionalAppliance appliance) {
+                    public SmartKitchen(ISmartAppliance appliance) {
                         this.appliance = appliance;
                     }
 
@@ -702,35 +754,41 @@ document.querySelector('#solid').innerHTML = `
                       Good Example - Segregated Interfaces
                   </div>
                   <pre class="${codeSnippet}">
-              <code>  interface Workable {
-      work(): void;
-  }
+              <code>
+                public interface ISteerable {
+                    public void steer();
+                }
+                
+                public interface IChoppable {
+                    public void chop();
+                }
+                
+                public interface IBlendable {
+                    public void blend();
+                }
+                
+                public interface IGrindable {
+                    public void grind();
+                }
+                </code>
+                <code>
+                
+            public class FoodProcessor implements ISteerable, IChoppable, IBlendable, IGrindable {
+                public void steer() { /* Implementation */ }
+                public void chop() { /* Implementation */ }
+                public void blend() { /* Implementation */ }
+                public void grind() { /* Implementation */ }
+            }
 
-  interface Eatable {
-      eat(): void;
-  }
+            public class Blender implements IBlendable {
+                public void blend() { /* Implementation */ }
+            }
 
-  interface Sleepable {
-      sleep(): void;
-  }
-
-  class HumanWorker implements Workable, Eatable, Sleepable {
-      work(): void { console.log("Working..."); }
-      eat(): void { console.log("Eating..."); }
-      sleep(): void { console.log("Sleeping..."); }
-  }
-
-  class RobotWorker implements Workable {
-      work(): void { console.log("Working..."); }
-      // No need to implement eat() or sleep()
-  }
-
-  // Clients only depend on what they need
-  class WorkManager {
-      manage(worker: Workable): void {
-          worker.work(); // Only cares about work capability
-      }
-  }</code></pre>
+            public class CoffeeGrinder implements IGrindable {
+                public void grind() { /* Implementation */ }
+            }
+              </code>
+              </pre>
               </div>
           </div>
         </section>
@@ -742,7 +800,7 @@ document.querySelector('#solid').innerHTML = `
                   <div class="${titleBadge}">D</div>
                   <div>
                       <h2 class="text-3xl font-bold text-blue-800">Dependency Inversion Principle (DIP)</h2>
-                      <p class="text-lg text-gray-600 italic">"High-level modules should not depend on low-level modules. Both should depend on abstractions."</p>
+                      <p class="text-lg text-gray-600 italic">High-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
                   </div>
               </div>
 
