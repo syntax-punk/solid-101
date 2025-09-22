@@ -12,9 +12,9 @@ document.querySelector('#solid').innerHTML = `
           <!-- Title Slide -->
           <section class="section-page ${sectionPage}">
             <div class="${slideFrame} shadow-2xl mb-8 p-12 text-center ${hoverEffect}">
-                <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6">SOLID</h1>
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6">S.O.L.I.D</h1>
                 <p class="text-xl md:text-2xl text-slate-600 mb-4">Building Better Software Through Better Design</p>
-                <p class="text-lg text-slate-500">A Developer's Guide to Object-Oriented Design</p>
+                <p class="text-lg text-slate-500">Origineer's Guide to Object-Oriented Design</p>
             </div>
           </section>
 
@@ -812,25 +812,28 @@ document.querySelector('#solid').innerHTML = `
                       Bad Example - Direct Dependency
                   </div>
                   <pre class="${codeSnippet}">
-              <code>  class MySQLDatabase {
-      save(data: string): void {
-          console.log('Saving data to MySQL...');
-      }
-  }
+            <code>  
+            class MySQLDatabase {
+                save(data: string): void {
+                    console.log('Saving data to MySQL...');
+                }
+            }
 
-  class UserService {
-      private database: MySQLDatabase; // Depends on concrete implementation
+            class UserService {
+                private database: MySQLDatabase; // depends on concrete implementations
 
-      constructor() {
-          this.database = new MySQLDatabase(); // Tightly coupled
-      }
+                constructor() {
+                    // tight coupling to MySQLDatabase
+                    this.database = new MySQLDatabase();
+                }
 
-      createUser(userData: string): void {
-          // Business logic here
-          this.database.save(userData);
-      }
-  }</code></pre>
-              </div>
+                createUser(userData: string): void {
+                    this.database.save(userData);
+                }
+            }
+      </code>
+      </pre>
+      </div>
 
               <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
                   <div class="font-bold text-green-700 mb-4 flex items-center">
@@ -838,40 +841,53 @@ document.querySelector('#solid').innerHTML = `
                       Good Example - Dependency Inversion
                   </div>
                   <pre class="${codeSnippet}">
-              <code>  interface Database {
-      save(data: string): void;
-  }
+              <code>
 
-  class MySQLDatabase implements Database {
-      save(data: string): void {
-          console.log('Saving data to MySQL...');
-      }
-  }
+        public interface IDatabase {
+            save(data: string): void;
+        }
 
-  class PostgreSQLDatabase implements Database {
-      save(data: string): void {
-          console.log('Saving data to PostgreSQL...');
-      }
-  }
+        public class MySQLDatabase implements IDatabase {
+            save(data: string): void {
+                console.log('Saving data to MySQL...');
+            }
+        }
 
-  class UserService {
-      private database: Database; // Depends on abstraction
+        public class PostgreSQLDatabase implements IDatabase {
+            save(data: string): void {
+                console.log('Saving data to PostgreSQL...');
+            }
+        }
 
-      constructor(database: Database) { // Dependency injection
-          this.database = database;
-      }
+        </code>
+        
+        <code>
 
-      createUser(userData: string): void {
-          // Business logic here
-          this.database.save(userData);
-      }
-  }
+        public class UserService {
+            private database: IDatabase; // depends on abstraction
 
-  // Usage - can easily switch implementations
-  const mysqlDB = new MySQLDatabase();
-  const userService = new UserService(mysqlDB);</code></pre>
-              </div>
-          </div>
+            constructor(database: IDatabase) { 
+                // dependency injection
+                this.database = database;
+            }
+
+            createUser(userData: string): void {
+                // Business logic here
+                this.database.save(userData);
+            }
+        }
+
+        // Usage - can easily switch implementations
+        const mysqlDB = new MySQLDatabase();
+        const userService = new UserService(mysqlDB);
+
+        const postgreSQLDB = new PostgreSQLDatabase();
+        const userService2 = new UserService(postgreSQLDB);
+
+        </code>
+        </pre>
+        </div>
+        </div>s
         </section>
 
           <!-- Summary -->
@@ -882,7 +898,7 @@ document.querySelector('#solid').innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-xl text-center ${hoverEffect}">
                         <h4 class="text-xl font-semibold mb-3">Single Responsibility</h4>
-                        <p>One class, one reason to change</p>
+                        <p>One module, one reason to change</p>
                     </div>
                     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-xl text-center ${hoverEffect}">
                         <h4 class="text-xl font-semibold mb-3">Open/Closed</h4>
