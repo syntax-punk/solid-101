@@ -1,8 +1,8 @@
 import './style.css'
 
-const sectionPage = ``;
-const slideFrame = `bg-zinc-100 rounded-2xl w-full h-fit`;
-const hoverEffect = `transform hover:scale-102 transition-transform duration-100`;
+const sectionPage = `h-fit min-h-screen w-full flex flex-col items-center justify-center py-6`;
+const slideFrame = `bg-zinc-100 rounded-2xl w-full h-fit py-8`;
+const hoverEffect = `transform hover:scale-102 transition-transform duration-800 ease-in-out`;
 const codeSnippet = `language-ts`;
 const titleBadge = `bg-gradient-to-r from-slate-950 to-indigo-950 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold mr-6 shadow-lg`;
 
@@ -18,7 +18,7 @@ document.querySelector('#solid').innerHTML = `
             </div>
           </section>
 
-          <!-- Introduction -->
+        <!-- Introduction 1 -->
           <section class="section-page ${sectionPage}">
             <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
                 <h2 class="text-3xl font-bold text-blue-800 mb-6 border-b-4 border-blue-800 pb-3">What are SOLID Principles?</h2>
@@ -48,6 +48,16 @@ document.querySelector('#solid').innerHTML = `
                             <span>Facilitates better team collaboration</span>
                         </li>
                     </ul>
+                </div>
+            </div>
+          </section>
+
+          <!-- Introduction 2 -->
+          <section class="section-page ${sectionPage}">
+            <div class="${slideFrame} shadow-xl mb-8 p-8 ${hoverEffect}">
+                <h2 class="text-3xl font-bold text-blue-800 mb-6 border-b-4 border-blue-800 pb-3">Well ... sometimes code stinks</h2>
+                <div class=" flex flex-col md:flex-row gap-6 w-full justify-around items-center">
+                    <img src="/imgs/stink.png" alt="code stinks" class="w-[920px] h-[920px] rounded-lg" />
                 </div>
             </div>
           </section>

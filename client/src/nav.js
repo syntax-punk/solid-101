@@ -16,8 +16,10 @@ rightButton.style.right = '32px';
 rightButton.style.transform = 'translateY(-50%)';
 rightButton.style.zIndex = '1000';
 
-leftButton.classList.add('w-12', 'h-12', 'text-xl', 'bg-white/10', 'px-2', 'py-1', 'rounded-full', 'cursor-pointer', 'shadow-lg', 'hover:bg-white/25', 'transition');
-rightButton.classList.add('w-12', 'h-12', 'text-xl', 'bg-white/10', 'px-2', 'py-1', 'rounded-full', 'cursor-pointer', 'shadow-lg', 'hover:bg-white/25', 'transition');
+const classes = ['w-12', 'h-12', 'text-xl', 'bg-white/10', 'px-2', 'py-1', 'rounded-full', 'cursor-pointer', 'shadow-lg', 'hover:bg-white/25', 'transition'];
+
+leftButton.classList.add(...classes);
+rightButton.classList.add(...classes);
 
 document.body.appendChild(leftButton);
 document.body.appendChild(rightButton);
