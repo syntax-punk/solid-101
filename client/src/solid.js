@@ -596,34 +596,23 @@ document.querySelector('#solid').innerHTML = `
                       Good Example - Proper Substitution
                   </div>
                   <pre class="${codeSnippet}">
-        <code>
-            // new behavioral interfaces - segregated by capability
-            public interface Flyable {
-                void fly();
-            }
-
-            public interface Swimmable {
-                void swim();
-            }
-        </code>
 
         <code>
             public abstract class Bird {
                 public void makeSound() { }
             }
 
-            public abstact class FlyingBird extends Bird implements Flyable {
-                @Override
+            public abstract class FlyingBird extends Bird {
                 public void fly() { }
             }
 
-            public abstract class SwimmingBird extends Bird implements Swimmable {
-                @Override
+            public abstract class SwimmingBird extends Bird {
                 public void swim() { }
             }
 
-            public abstract class UltimateBird extends Bird implements Flyable, Swimmable {
-                // keep unimplemented so subclasses must implement everything
+            public abstract class UltimateBird extends Bird {
+                public void fly() { }
+                public void swim() { }
             }
         </code>
 
@@ -823,22 +812,22 @@ document.querySelector('#solid').innerHTML = `
                   </div>
                   <pre class="${codeSnippet}">
             <code>  
-            class MySQLDatabase {
-                save(data: string): void {
+            public class MySQLDatabase {
+                public void saveToDb(String data) {
                     console.log('Saving data to MySQL...');
                 }
             }
 
-            class UserService {
-                private database: MySQLDatabase; // depends on concrete implementations
+            public class UserService {
+                private MySQLDatabase database; // depends on concrete implementations
 
-                constructor() {
+                public UserService() {
                     // tight coupling to MySQLDatabase
                     this.database = new MySQLDatabase();
                 }
 
-                createUser(userData: string): void {
-                    this.database.save(userData);
+                public void createUser(String userData) {
+                    this.database.saveToDb(userData);
                 }
             }
       </code>
@@ -854,17 +843,17 @@ document.querySelector('#solid').innerHTML = `
               <code>
 
         public interface IDatabase {
-            save(data: string): void;
+            public void saveToDb(String data);
         }
 
         public class MySQLDatabase implements IDatabase {
-            save(data: string): void {
+            public void saveToDb(String data) {
                 console.log('Saving data to MySQL...');
             }
         }
 
         public class PostgreSQLDatabase implements IDatabase {
-            save(data: string): void {
+            public void saveToDb(String data) {
                 console.log('Saving data to PostgreSQL...');
             }
         }
@@ -874,30 +863,30 @@ document.querySelector('#solid').innerHTML = `
         <code>
 
         public class UserService {
-            private database: IDatabase; // depends on abstraction
+            private IDatabase database; // depends on abstraction
 
-            constructor(database: IDatabase) { 
+            public UserService(IDatabase database) { 
                 // dependency injection
                 this.database = database;
             }
 
-            createUser(userData: string): void {
+            public void createUser(String userData) {
                 // Business logic here
-                this.database.save(userData);
+                this.database.saveToDb(userData);
             }
         }
 
         // Usage - can easily switch implementations
-        const mysqlDB = new MySQLDatabase();
-        const userService = new UserService(mysqlDB);
+         MySQLDatabase mysqlDB = new MySQLDatabase();
+         UserService userService = new UserService(mysqlDB);
 
-        const postgreSQLDB = new PostgreSQLDatabase();
-        const userService2 = new UserService(postgreSQLDB);
+        PostgreSQLDatabase postgreSQLDB = new PostgreSQLDatabase();
+        UserService userService2 = new UserService(postgreSQLDB);
 
         </code>
         </pre>
         </div>
-        </div>s
+        </div>
         </section>
 
           <!-- Summary -->
