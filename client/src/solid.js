@@ -14,7 +14,7 @@ document.querySelector('#solid').innerHTML = `
             <div class="${slideFrame} shadow-2xl mb-8 p-12 text-center ${hoverEffect}">
                 <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6">S.O.L.I.D</h1>
                 <p class="text-xl md:text-2xl text-slate-600 mb-4">Building Better Software Through Better Design</p>
-                <p class="text-lg text-slate-500">Origineer's Guide to Object-Oriented Design</p>
+                <p class="text-lg text-slate-500">Developer's Guide to Object-Oriented Design</p>
             </div>
           </section>
 
