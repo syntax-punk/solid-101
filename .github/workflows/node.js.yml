@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build and Deplioy to Pages
 
 on:
   push:
@@ -27,3 +27,12 @@ jobs:
     - name: build
       working-directory: ./client
       run: npm run build
+    - name: setup
+      uses: actions/configure-pages@v4
+    - name: upload
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: client/dist
+    - name: deploy
+      id: deployment
+      uses: actions/deploy-pages@v4
